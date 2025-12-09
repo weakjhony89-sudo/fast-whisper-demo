@@ -4,6 +4,7 @@ import tempfile
 import subprocess
 import json
 import os
+from datetime import datetime
 
 # -----------------------------
 # Load Faster Whisper Model
@@ -57,13 +58,19 @@ if uploaded_file:
 
     # --- Transcription ---
     st.info("Running Faster Whisper…")
+    start_time = datetime.now()
     with st.spinner("Transcribing audio…"):
         segments, info = model.transcribe(audio_path)
 
     # --------------- TEXT FORMAT --------------------
     st.subheader("📝 Text Transcription")
     text_output = " ".join([seg.text for seg in segments])
+    end_time = datetime.now()
+    execution_time = end_time - start_time
+
+    
     st.write(text_output)
+    st.write(f"**Transcription Time:** {execution_time.total_seconds():.2f} seconds")
 
     # --------------- Download Buttons ---------------
     st.download_button(
